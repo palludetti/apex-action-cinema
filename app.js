@@ -372,6 +372,113 @@ function renderFavoritesDrawer() {
   `).join('');
 }
 
+// Comments Storage State (LocalStorage)
+let commentsStorage = JSON.parse(localStorage.getItem('apex_comments')) || {
+  'cyberpunk-apex': [
+    { id: 'c1', author: 'Alex Cyber', rating: '🔥 Explosivo', time: 'Há 15 min', text: 'Insano demais! O roteiro de 4 minutos do Kane contra a Apex Tower ficou perfeito demais com as cenas neon!', likes: 24 },
+    { id: 'c2', author: 'Mariana VFX', rating: '🔥 Explosivo', time: 'Há 1 hora', text: 'A sincronização das legendas IMAX com o tempo do vídeo está surreal de bom!', likes: 18 }
+  ],
+  'nitro-overdrive': [
+    { id: 'c1', author: 'SpeedRacer', rating: '🔥 Explosivo', time: 'Há 30 min', text: 'Cenas de drift V8 reais na rodovia noturna! Adorei a velocidade!', likes: 15 }
+  ],
+  'shadow-blade': [
+    { id: 'c1', author: 'RoninNinja', rating: '🔥 Explosivo', time: 'Há 45 min', text: 'Combate de katanas sensacional! A animação e o ritmo de luta ficaram nota 10!', likes: 19 }
+  ]
+};
+
+function renderComments(movieId) {
+  const commentsFeed = document.getElementById('commentsFeed');
+  const commentsCount = document.getElementById('commentsCount');
+  const commentAuthorInput = document.getElementById('commentAuthor');
+  
+  const savedName = localStorage.getItem('apex_commenter_name');
+  if (savedName && commentAuthorInput) {
+    commentAuthorInput.value = savedName;
+  }
+
+  const movieComments = commentsStorage[movieId] || [];
+  if (commentsCount) commentsCount.textContent = movieComments.length;
+
+  if (!commentsFeed) return;
+
+  if (movieComments.length === 0) {
+    commentsFeed.innerHTML = `
+      <div style="text-align:center; padding:2rem; color:var(--text-muted);">
+        <i class="fa-regular fa-comment-dots" style="font-size:2.5rem; margin-bottom:0.5rem; color:var(--text-dim);"></i>
+        <p>Seja o primeiro fã a comentar sobre este filme!</p>
+      </div>
+    `;
+    return;
+  }
+
+  commentsFeed.innerHTML = movieComments.map(comment => {
+    const initial = comment.author ? comment.author.charAt(0).toUpperCase() : 'F';
+    return `
+      <div class="comment-card">
+        <div class="comment-avatar">${initial}</div>
+        <div class="comment-content">
+          <div class="comment-top-row">
+            <span class="comment-author-name">${comment.author}</span>
+            <span class="comment-badge-rating">${comment.rating}</span>
+            <span class="comment-time">${comment.time}</span>
+          </div>
+          <p class="comment-body-text">${comment.text}</p>
+          <div class="comment-actions-row">
+            <button class="comment-like-btn" onclick="likeComment('${movieId}', '${comment.id}')">
+              <i class="fa-solid fa-thumbs-up"></i> <span>${comment.likes || 0}</span> Curtidas
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function submitComment(e, movieId) {
+  e.preventDefault();
+  const authorInput = document.getElementById('commentAuthor');
+  const ratingInput = document.getElementById('commentRating');
+  const textInput = document.getElementById('commentText');
+
+  const author = authorInput.value.trim();
+  const rating = ratingInput.value;
+  const text = textInput.value.trim();
+
+  if (!author || !text) return;
+
+  localStorage.setItem('apex_commenter_name', author);
+
+  if (!commentsStorage[movieId]) {
+    commentsStorage[movieId] = [];
+  }
+
+  const newComment = {
+    id: 'c_' + Date.now(),
+    author: author,
+    rating: rating,
+    time: 'Agora mesmo',
+    text: text,
+    likes: 0
+  };
+
+  commentsStorage[movieId].unshift(newComment);
+  localStorage.setItem('apex_comments', JSON.stringify(commentsStorage));
+
+  textInput.value = '';
+  renderComments(movieId);
+}
+
+function likeComment(movieId, commentId) {
+  if (commentsStorage[movieId]) {
+    const comment = commentsStorage[movieId].find(c => c.id === commentId);
+    if (comment) {
+      comment.likes = (comment.likes || 0) + 1;
+      localStorage.setItem('apex_comments', JSON.stringify(commentsStorage));
+      renderComments(movieId);
+    }
+  }
+}
+
 // Open Video Modal & Setup Custom Controls
 let currentSpeech = null;
 let activeMovieData = null;
@@ -415,6 +522,13 @@ function openVideoModal(movieId) {
       <span style="font-weight:800; color:var(--primary-red); font-size:0.8rem;">${movie.actionIntensity}%</span>
     </div>
   `;
+
+  // Render Comments Section for this Movie
+  renderComments(movieId);
+  const commentForm = document.getElementById('commentForm');
+  if (commentForm) {
+    commentForm.onsubmit = (e) => submitComment(e, movieId);
+  }
 
   // Media Source Selector Listeners
   btnSourceMp4.onclick = () => {

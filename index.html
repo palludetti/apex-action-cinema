@@ -189,6 +189,37 @@
             <!-- Dynamic storyboard chapters buttons rendered via JS -->
           </div>
         </div>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+          <div class="comments-header">
+            <h3><i class="fa-solid fa-comments" style="color:var(--primary-red)"></i> Comentários dos Fãs (<span id="commentsCount">0</span>)</h3>
+          </div>
+
+          <!-- Add Comment Form -->
+          <form id="commentForm" class="comment-form">
+            <div class="form-inputs-row">
+              <input type="text" id="commentAuthor" class="comment-input" placeholder="Seu nome ou apelido..." required autocomplete="off">
+              <select id="commentRating" class="comment-select">
+                <option value="🔥 Explosivo">🔥 🔥 🔥 🔥 🔥 (5/5 Explosivo)</option>
+                <option value="⚡ Muito Bom">⚡ ⚡ ⚡ ⚡ (4/5 Muito Bom)</option>
+                <option value="💣 Insano">💣 💣 💣 (3/5 Insano)</option>
+                <option value="👍 Legal">👍 👍 (2/5 Legal)</option>
+              </select>
+            </div>
+            <textarea id="commentText" class="comment-textarea" placeholder="Escreva sua opinião sobre as cenas de ação deste filme..." rows="3" required></textarea>
+            <div class="form-action-row">
+              <button type="submit" class="btn-primary btn-submit-comment">
+                <i class="fa-solid fa-paper-plane"></i> Publicar Comentário
+              </button>
+            </div>
+          </form>
+
+          <!-- Comments Feed Grid -->
+          <div id="commentsFeed" class="comments-feed">
+            <!-- Dynamic comments rendered via JS -->
+          </div>
+        </div>
       </div>
 
     </div>
