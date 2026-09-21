@@ -102,10 +102,11 @@
         <video id="modalVideoPlayer" playsinline></video>
         <iframe id="youtubeIframePlayer" style="display:none; width:100%; height:100%; border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         
-        <!-- Media Source Selector Badge -->
+        <!-- Media Source Selector & Cinema Mode Badge -->
         <div class="media-source-toggle">
           <button id="btnSourceMp4" class="source-btn active"><i class="fa-solid fa-file-video"></i> Vídeo HD</button>
           <button id="btnSourceYoutube" class="source-btn"><i class="fa-brands fa-youtube" style="color:#ff0000"></i> YouTube 4K Exemplo</button>
+          <button id="btnToggleTheaterMode" class="source-btn" title="Apagar Luzes / Modo Cinema Imersivo"><i class="fa-solid fa-moon"></i> Luzes Off</button>
         </div>
 
         <!-- Cinematic Subtitles Overlay (Sem Talk-Head, 1080p Pure Cinema) -->
@@ -150,7 +151,12 @@
 
       <!-- Movie Details Under Video -->
       <div class="modal-info-body">
-        <h2 class="modal-movie-title" id="modalMovieTitle">Título do Filme</h2>
+        <div class="modal-title-header">
+          <h2 class="modal-movie-title" id="modalMovieTitle">Título do Filme</h2>
+          <button id="btnShareMovie" class="btn-share-movie" title="Copiar Link Direto do Filme">
+            <i class="fa-solid fa-share-nodes"></i> Compartilhar
+          </button>
+        </div>
         <div class="modal-meta-row" id="modalMetaRow">
           <!-- Meta Tags & Action Meter -->
         </div>
@@ -244,6 +250,11 @@
     <p>O aplicativo definitivo para fãs de filmes de ação com vídeos e trailers dedicados para cada filme.</p>
     <small style="margin-top:10px; display:block; color:#5c627a;">&copy; 2026 Apex Action Cinema. Todos os direitos reservados.</small>
   </footer>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="toast-notification">
+    <i class="fa-solid fa-circle-check" style="color:var(--accent-gold);"></i> <span id="toastMsg">Link do filme copiado com sucesso!</span>
+  </div>
 
   <!-- Application Logic JS -->
   <script src="app.js"></script>

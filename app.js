@@ -217,12 +217,34 @@ const progressFill = document.getElementById('progressFill');
 const timeDisplay = document.getElementById('timeDisplay');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 
+// Toast Helper
+function showToast(msg) {
+  const toast = document.getElementById('toastNotification');
+  const toastMsg = document.getElementById('toastMsg');
+  if (toast && toastMsg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('active');
+    setTimeout(() => {
+      toast.classList.remove('active');
+    }, 3000);
+  }
+}
+
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
   renderHero(moviesData[0]);
   renderMovies();
   updateWatchlistBadge();
   setupEventListeners();
+
+  // Check URL Query Parameters for direct movie links (e.g. ?movie=cyberpunk-apex)
+  const urlParams = new URLSearchParams(window.location.search);
+  const movieParam = urlParams.get('movie');
+  if (movieParam) {
+    setTimeout(() => {
+      openVideoModal(movieParam);
+    }, 300);
+  }
 });
 
 // Render Hero Section
@@ -550,6 +572,36 @@ function openVideoModal(movieId) {
     youtubeIframePlayer.src = movie.youtubeEmbedUrl || 'https://www.youtube.com/embed/LembwXMflo0?autoplay=1';
     playerControls.style.display = 'none';
   };
+
+  // Share Movie & Theater Mode Button Handlers
+  const btnShareMovie = document.getElementById('btnShareMovie');
+  const btnToggleTheaterMode = document.getElementById('btnToggleTheaterMode');
+
+  if (btnShareMovie) {
+    btnShareMovie.onclick = () => {
+      const shareUrl = `${window.location.origin}${window.location.pathname}?movie=${movie.id}`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          showToast('🔗 Link do filme copiado para a área de transferência!');
+        }).catch(() => {
+          showToast(`Link do filme: ${shareUrl}`);
+        });
+      } else {
+        showToast(`Link do filme: ${shareUrl}`);
+      }
+    };
+  }
+
+  if (btnToggleTheaterMode) {
+    btnToggleTheaterMode.onclick = () => {
+      videoModalBackdrop.classList.toggle('theater-mode');
+      const isTheater = videoModalBackdrop.classList.contains('theater-mode');
+      btnToggleTheaterMode.innerHTML = isTheater 
+        ? '<i class="fa-solid fa-sun"></i> Luzes On' 
+        : '<i class="fa-solid fa-moon"></i> Luzes Off';
+      showToast(isTheater ? '🍿 Modo Cinema Ativado (Luzes Apagadas)' : '💡 Modo Padrão Ativado');
+    };
+  }
 
   // Storyboard & Narração Handler
   const storyboardSection = document.getElementById('storyboardSection');

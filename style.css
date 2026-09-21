@@ -1415,4 +1415,84 @@ body {
   color: var(--primary-red);
 }
 
+/* Modal Title Header & Share Button */
+.modal-title-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-share-movie {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-full);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-share-movie:hover {
+  background: var(--primary-red);
+  border-color: var(--primary-red);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+/* Theater Mode (Luzes Off) */
+.modal-backdrop.theater-mode {
+  background: #000000 !important;
+}
+
+.modal-backdrop.theater-mode .modal-info-body {
+  opacity: 0.15;
+  filter: blur(2px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, filter 0.4s ease;
+}
+
+.modal-backdrop.theater-mode .modal-info-body:hover {
+  opacity: 1;
+  filter: blur(0);
+  pointer-events: auto;
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: rgba(18, 20, 28, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-red);
+  border-radius: var(--radius-full);
+  padding: 0.85rem 1.6rem;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), var(--shadow-glow);
+  z-index: 9999;
+  transform: translateY(100px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+}
+
+.toast-notification.active {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
 
